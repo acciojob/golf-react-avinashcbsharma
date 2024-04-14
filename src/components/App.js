@@ -10,7 +10,7 @@ class App extends Component {
     };
   }
 
-  function buttonClickHandler (){
+  buttonClickHandler = () => {
     this.setState({ showBall: true });
   };
 
