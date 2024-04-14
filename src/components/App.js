@@ -2,52 +2,53 @@ import React, { Component, useState } from "react";
 import '../styles/App.css';
 
 class App extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            renderBall: false,
-            posi : 0,
-            ballPosition: { left: "0px" }
-        };
-        this.renderChoice = this.renderBallOrButton.bind(this)
-        this.buttonClickHandler = this.buttonClickHandler.bind(this)
+  constructor(props) {
+    super(props);
+    this.state = {
+      showBall: false,
+      ballPosition: 0
     };
+  }
 
-    buttonClickHandler() {
-        this.setState({ renderBall: true})
-   };
-    renderBallOrButton() {
-		if (this.state.renderBall) {
-		    return <div className="ball" style={this.state.ballPosition}></div>
-		} else {
-		    return <button onClick={this.buttonClickHandler} >Start</button>
-		}
-    }
+  buttonClickHandler = () => {
+    this.setState({ showBall: true });
+  };
 
-    // bind ArrowRight keydown event
-    handleKeyDown = (event) => {
-        if (event.key === 'ArrowRight' || event.keyCode === 39) {
-          this.moveBallRight();
-        }
-      };
-    
-      moveBallRight = () => {
-        this.setState((prevState) => ({
-          ballPosition: prevState.ballPosition + 5
-        }));
-      };
-    componentDidMount() {
-        document.addEventListener('keydown', this.handleKeyDown);
-    }
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKeyDown);
+  }
 
-    render() {
-        return (
-            <div className="playground">
-                {this.renderBallOrButton()}
-            </div>
-        )
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyDown);
+  }
+
+  handleKeyDown = (event) => {
+    if (event.key === 'ArrowRight' || event.keyCode === 39) {
+      this.moveBallRight();
     }
+  };
+
+  moveBallRight = () => {
+    this.setState((prevState) => ({
+      ballPosition: prevState.ballPosition + 5
+    }));
+  };
+
+  renderChoice = () => {
+    const { showBall } = this.state;
+    if (!showBall) {
+      return (
+        <button className="start" onClick={this.buttonClickHandler}>
+          Start
+        </button>
+      );
+    } else {
+      return <div className="ball" style={{ left: this.state.ballPosition + 'px' }}></div>;
+    }
+  };
+
+  render() {
+    return <div className="App">{this.renderChoice()}</div>;
+  }
 }
-
-
 export default App;
